@@ -10,7 +10,7 @@ class User {
         this.created_at = created_at;
     }
 
-    static checkCreated(email) {
+    static findByEmail(email) {
         const db = getDB();
         return db.collection('users').findOne({ email:email });
     }

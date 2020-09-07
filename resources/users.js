@@ -19,7 +19,7 @@ async function post(req, res, next)  {
     const avatar = s3FileLink + 'users/unknown.png';
 
     try {
-        let user = await User.checkCreated(email);
+        let user = await User.findByEmail(email);
         if(user) {
             const error = new Error('user with email exists already');
             error.statusCode = 400;
