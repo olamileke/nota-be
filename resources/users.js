@@ -10,7 +10,7 @@ async function post(req, res, next)  {
         const error = new Error('validation failed')
         error.statusCode = 422;
         error.errors = errors;
-        throw(error);
+        return next(error);
     }
 
     const name = req.body.name;
@@ -23,7 +23,7 @@ async function post(req, res, next)  {
         if(user) {
             const error = new Error('user with email exists already');
             error.statusCode = 400;
-            throw error;
+            throw(error);
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -41,7 +41,7 @@ async function post(req, res, next)  {
         if(!error.statusCode) {
             error.statusCode = 500;
         }
-        next(error);
+        return next(error);
     }
 }
 
