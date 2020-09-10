@@ -31,7 +31,7 @@ async function post(req, res, next) {
     try {
         note = new Note(req.user._id, title, content, Date.now(), Date.now());
         const { ops } = await note.save();
-        const activity = new Activity(req.user._id, ops[0]._id, title, 1, Date.now());
+        const activity = new Activity(req.user._id, ops[0]._id, title, null, 1, Date.now());
         await activity.save();
     }
     catch(error) {
@@ -49,5 +49,39 @@ async function post(req, res, next) {
     })
 }
 
+async function get(req, res, next) {
+
+    let limit;
+    req.query.limit ? limit = Number(req.query.limit) : '';
+    
+    if(limit) {
+        try {
+            const notes = await Note.getMultiple(req.user._id, null, limit);
+            res.status(200).json({
+                data:{
+                    notes:formatNotes(notes)
+                }
+            })            
+        }
+        catch(error) {
+            if(!error.statusCode) {
+                error.statusCode = 500;
+            }
+            next(error);
+        }
+    }
+}
+
+const formatNotes = notes => {
+    return notes.map(note => {
+        const formattedNote = { ...note };
+        const length = formattedNote.versions.length;
+        formattedNote.content = formattedNote.versions[length - 1].content;
+        formattedNote.versions = length;
+        return formattedNote;
+    })
+}
+
 exports.post = post;
+exports.get = get;
 

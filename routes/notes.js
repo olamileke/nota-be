@@ -6,4 +6,6 @@ const notes = require('../resources/notes');
 
 router.post('/notes', authenticate, [ body('content').isLength({ min:17 }) ], notes.post);
 
+router.get('/notes', authenticate, notes.get);
+
 module.exports = router;

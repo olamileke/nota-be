@@ -4,6 +4,7 @@ const connectToDatabase = require('./utils/database').connectToDatabase;
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth'); 
 const notesRoutes = require('./routes/notes');
+const activityRoutes = require('./routes/activities');
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,8 +17,9 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/v1', userRoutes);
-app.use('/api/v1/', authRoutes);
-app.use('/api/v1/', notesRoutes);
+app.use('/api/v1', authRoutes);
+app.use('/api/v1', notesRoutes);
+app.use('/api/v1', activityRoutes);
 
 // custom error handler
 app.use((error, req, res, next) => {
