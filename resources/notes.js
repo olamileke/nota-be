@@ -1,6 +1,7 @@
 const Note = require('../models/note');
 const Activity = require('../models/activity');
 const { validationResult } = require('express-validator');
+const perPage = require('../utils/config').perPage;
 
 async function post(req, res, next) {   
     const errors = validationResult(req);
@@ -56,8 +57,8 @@ async function get(req, res, next) {
     
     if(limit) {
         try {
-            const notes = await Note.getMultiple(req.user._id, null, limit);
-            return res.status(200).json({
+            const notes = await Note.getLastUpdated(req.user._id, limit);
+            return res.status(200).json({ 
                 data:{
                     notes:formatNotes(notes)
                 }
@@ -67,15 +68,17 @@ async function get(req, res, next) {
             if(!error.statusCode) {
                 error.statusCode = 500;
             }
-            next(error);
+            return next(error);
         }
     }
 
     let page;
     req.query.page ? page = Number(req.query.page) : page = 1;
+    const skip = (page - 1) * perPage;
+    limit = page * perPage;
 
     try {
-        const notes = await Note.getMultiple(req.user._id, page, null);
+        const notes = await Note.getMultiple(req.user._id, skip, limit);
         const totalNotes = await Note.count(req.user._id);
 
         res.status(200).json({

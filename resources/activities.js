@@ -1,12 +1,12 @@
 const Activity = require('../models/activity');
-const perPage = require('../utils/config').perPage;
+const activityPerPage = require('../utils/config').activityPerPage;
 
 async function get(req, res, next) {
     let page;
 
     req.query.page ? page = Number(req.query.page) : page = 1;
-    const start = (page - 1) * perPage;
-    const limit = page * perPage;
+    const start = (page - 1) * activityPerPage;
+    const limit = page * activityPerPage;
 
     try {
         const activities = await Activity.get(req.user._id, start, limit);
