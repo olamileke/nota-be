@@ -57,7 +57,7 @@ async function get(req, res, next) {
     if(limit) {
         try {
             const notes = await Note.getMultiple(req.user._id, null, limit);
-            res.status(200).json({
+            return res.status(200).json({
                 data:{
                     notes:formatNotes(notes)
                 }
@@ -69,6 +69,27 @@ async function get(req, res, next) {
             }
             next(error);
         }
+    }
+
+    let page;
+    req.query.page ? page = Number(req.query.page) : page = 1;
+
+    try {
+        const notes = await Note.getMultiple(req.user._id, page, null);
+        const totalNotes = await Note.count(req.user._id);
+
+        res.status(200).json({
+            data:{
+                notes:formatNotes(notes),
+                totalNotes:totalNotes
+            }
+        })
+    }
+    catch(error) {
+        if(!error.statusCode) {
+            error.statusCode = 500;
+        }
+        return next(error);
     }
 }
 
