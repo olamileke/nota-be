@@ -1,6 +1,8 @@
 const Note = require('../models/note');
 const Activity = require('../models/activity');
 const { validationResult } = require('express-validator');
+const getTitle = require('../utils/title');
+const formatNotes = require('../utils/formatnotes');
 const perPage = require('../utils/config').perPage;
 
 async function post(req, res, next) {   
@@ -14,19 +16,8 @@ async function post(req, res, next) {
     }
 
     const content = req.body.content;
-    let [ wordOne, wordTwo, wordThree, ...rest ] = content.split(' ');
-
-    const splits = wordOne.split('>');
-    wordOne = splits[splits.length - 1];
-    let title;
-
-    if(!wordTwo || !wordThree) {
-        title = wordOne.slice(0, 3);
-    } else {
-        title = wordOne.charAt(0) + wordTwo.charAt(0) + wordThree.charAt(0);
-        title = title.toLowerCase();
-    }
-
+    const title = getTitle(content);
+        
     let note;
 
     try {
@@ -94,16 +85,6 @@ async function get(req, res, next) {
         }
         return next(error);
     }
-}
-
-const formatNotes = notes => {
-    return notes.map(note => {
-        const formattedNote = { ...note };
-        const length = formattedNote.versions.length;
-        formattedNote.content = formattedNote.versions[length - 1].content;
-        formattedNote.versions = length;
-        return formattedNote;
-    })
 }
 
 exports.post = post;

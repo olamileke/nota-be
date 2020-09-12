@@ -1,7 +1,7 @@
 const { get } = require('../routes/notes');
 const { ObjectID } = require('mongodb');
 const getDB = require('../utils/database').getDB;
-const hash = require('../utils/hash').hash;
+const hash = require('../utils/hash');
 
 class Note {
 
@@ -19,6 +19,11 @@ class Note {
         return db.collection('notes').insertOne(this);
     }
 
+    static findByID(id) {
+        const db = getDB();
+        return db.collection('notes').findOne({ _id:new ObjectID(id) });
+    }
+
     static count(user_id) {
         const db = getDB();
         return db.collection('notes').find({ user_id:new ObjectID(user_id) }).count();
@@ -32,6 +37,11 @@ class Note {
     static getMultiple(user_id, skip, limit) {
         const db = getDB();
         return db.collection('notes').find({ user_id:new ObjectID(user_id) }).sort({ created_at:-1 }).skip(skip).limit(limit).toArray();
+    }
+
+    static update(note) {
+        const db = getDB();
+        return db.collection('notes').updateOne({ _id:new ObjectID(note._id) }, { $set:{ title:note.title, updated_at:Date.now(), versions:note.versions } });
     }
 }
 

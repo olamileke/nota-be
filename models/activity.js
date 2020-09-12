@@ -1,5 +1,4 @@
 const { ObjectID } = require('mongodb');
-
 const getDB = require('../utils/database').getDB;
 
 class Activity {
@@ -8,7 +7,7 @@ class Activity {
         this.user_id = user_id;
         this.note_id = note_id;
         this.note_title = note_title;
-        version ? this.version = version : '';
+        version ? this.version = version : null;
         this.action = action;
         this.created_at = created_at;
     }
@@ -26,7 +25,12 @@ class Activity {
     static get(user_id, skip, limit) {
         const db = getDB();
         return db.collection('activities').find({ user_id:new ObjectID(user_id) }).sort({ created_at:-1 }).skip(skip).limit(limit).toArray();
-    }   
+    } 
+    
+    static updateTitle(note_id, title) {
+        const db = getDB();
+        return db.collection('activities').updateMany({ note_id:new ObjectID(note_id) }, { $set:{ note_title:title } });
+    }
 }
 
 module.exports = Activity;

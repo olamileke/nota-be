@@ -1,5 +1,5 @@
 
-exports.hash = () => {
+module.exports = () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let hash = '#';
 
