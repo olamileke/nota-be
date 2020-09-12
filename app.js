@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
 const activityRoutes = require('./routes/activities');
 const noteRoutes = require('./routes/note');
+const versionsRoutes = require('./routes/versions');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,6 +23,7 @@ app.use('/api/v1', authRoutes);
 app.use('/api/v1', notesRoutes);
 app.use('/api/v1', activityRoutes);
 app.use('/api/v1', noteRoutes);
+app.use('/api/v1', versionsRoutes);
 
 // custom error handler
 app.use((error, req, res, next) => {

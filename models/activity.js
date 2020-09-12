@@ -31,6 +31,11 @@ class Activity {
         const db = getDB();
         return db.collection('activities').updateMany({ note_id:new ObjectID(note_id) }, { $set:{ note_title:title } });
     }
+
+    static delete(note_id) {
+        const db = getDB();
+        return db.collection('activities').deleteMany({ note_id:new ObjectID(note_id) });
+    }
 }
 
 module.exports = Activity;

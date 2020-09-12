@@ -43,6 +43,11 @@ class Note {
         const db = getDB();
         return db.collection('notes').updateOne({ _id:new ObjectID(note._id) }, { $set:{ title:note.title, updated_at:Date.now(), versions:note.versions } });
     }
+
+    static delete(id) {
+        const db = getDB();
+        return db.collection('notes').deleteOne({ _id:new ObjectID(id) });
+    }
 }
 
 module.exports = Note;

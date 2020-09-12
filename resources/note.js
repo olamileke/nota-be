@@ -72,4 +72,38 @@ async function put(req, res, next) {
     }
 }
 
+async function deleteNote(req, res, next) {
+
+    const id = req.params.id;
+
+    try {
+        const note = await Note.findByID(id);
+        if(!note) {
+            const error = new Error('note does not exist');
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        if(req.user._id.toString() != note.user_id.toString()) {
+            const error = new Error('you are not authorized');
+            error.statusCode = 403;
+            throw error;
+        }
+
+        await Note.delete(id);
+        await Activity.delete(id);
+
+        res.status(204).json({
+            message:'note deleted successfully'
+        });
+    }
+    catch(error) {
+        if(!error.statusCode) {
+            error.statusCode = 500;
+        }
+        return next(error);
+    }
+}
+
 exports.put = put;
+exports.delete = deleteNote;
