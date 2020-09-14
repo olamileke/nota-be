@@ -36,6 +36,11 @@ class Activity {
         const db = getDB();
         return db.collection('activities').deleteMany({ note_id:new ObjectID(note_id) });
     }
+
+    static deleteVersion(note_id, hash) {
+        const db = getDB();
+        return db.collection('activities').deleteOne({ $and:[{ note_id:new ObjectID(note_id) }, { version:hash }] });
+    }
 }
 
 module.exports = Activity;
