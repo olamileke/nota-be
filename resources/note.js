@@ -49,13 +49,13 @@ async function put(req, res, next) {
             note.title = title;
             updateTitle = true;
         }
-        await Note.update(note);
+        const now = await Note.update(note); 
 
         if(updateTitle) {
             await Activity.updateTitle(note._id, title);
         }
 
-        const activity = new Activity(req.user._id, note._id, note.title, version.hash, 2, Date.now());
+        const activity = new Activity(req.user._id, note._id, note.title, version.hash, 2, now);
         await activity.save();
 
         res.status(200).json({

@@ -23,7 +23,7 @@ async function post(req, res, next) {
     try {
         note = new Note(req.user._id, title, content, Date.now(), Date.now());
         const { ops } = await note.save();
-        const activity = new Activity(req.user._id, ops[0]._id, title, null, 1, Date.now());
+        const activity = new Activity(req.user._id, ops[0]._id, title, null, 1, ops[0].created_at);
         await activity.save();
     }
     catch(error) {

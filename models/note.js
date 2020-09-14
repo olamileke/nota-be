@@ -41,12 +41,21 @@ class Note {
 
     static update(note) {
         const db = getDB();
-        return db.collection('notes').updateOne({ _id:new ObjectID(note._id) }, { $set:{ title:note.title, updated_at:Date.now(), versions:note.versions } });
+        const now = Date.now();
+        return db.collection('notes').updateOne({ _id:new ObjectID(note._id) }, { $set:{ title:note.title, updated_at:now, versions:note.versions } })
+        .then(() => {
+            return now;
+        })
     }
 
     static updateVersions(id, versions) {
         const db = getDB();
         return db.collection('notes').updateOne({ _id:new ObjectID(id) }, { $set:{ versions:versions } });
+    }
+
+    static setUpdated(id, date) {
+        const db = getDB();
+        return db.collection('notes').updateOne({ _id:new ObjectID(id) }, { $set:{ updated_at:date } });
     }
 
     static delete(id) {

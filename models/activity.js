@@ -41,6 +41,13 @@ class Activity {
         const db = getDB();
         return db.collection('activities').deleteOne({ $and:[{ note_id:new ObjectID(note_id) }, { version:hash }] });
     }
+
+    // deleting all activities recorded after a particular date
+    // done when the user is reverting to a previous version of a note
+    static deleteVersions(note_id, date) {
+        const db = getDB();
+        return db.collection('activities').deleteMany({ $and:[{ note_id:new ObjectID(note_id) }, { created_at:{ $gt:date } }] });
+    }
 }
 
 module.exports = Activity;
