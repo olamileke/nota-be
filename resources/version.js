@@ -81,7 +81,6 @@ async function patch(req, res, next) {
         const idx = versions.findIndex(version => version.hash == hash);
         const currentVersion = versions[idx];
 
-        console.log(idx);
         if(idx != 0 && (idx == null || idx == undefined)) {
             const error = new Error('version does not exist');
             error.statusCode = 404;

@@ -21,6 +21,11 @@ class User {
         return db.collection('users').findOne({ email:email });
     }
 
+    static updateAvatar(id, avatar) {
+        const db = getDB();
+        return db.collection('users').updateOne({ _id:new ObjectID(id) }, { $set:{ avatar:avatar } });
+    }
+
     save() {
         const db = getDB();
         return db.collection('users').insertOne(this);

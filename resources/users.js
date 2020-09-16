@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const file = require('../utils/file');
 const s3FileLink = require('../utils/config').s3FileLink;
 
 async function post(req, res, next)  {
@@ -45,4 +46,41 @@ async function post(req, res, next)  {
     }
 }
 
+async function put(req, res, next) {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        const error = new Error('image is required');
+        error.statusCode = 422;
+        return next(error);
+    }
+
+    const awsUniqueKey = req.user.avatar.split(s3FileLink)[1];
+    
+    if(awsUniqueKey != 'users/unknown.png') {
+        file.delete(awsUniqueKey, next);
+    }
+
+    await file.upload(req, next, 'users', avatar => {
+
+        User.updateAvatar(req.user._id, avatar)
+        .then(() => {
+            const user = { name:req.user.name, email:req.user.email, avatar };
+            res.status(200).json({
+                data:{
+                    user:user
+                }
+            })
+        })
+        .catch(error => {
+            if(!error.statusCode) {
+                error.statusCode = 500;
+            }
+            return next(error);
+        })
+    
+    });
+}
+
 exports.post = post;
+exports.put = put;
