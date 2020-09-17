@@ -45,6 +45,7 @@ async function put(req, res, next) {
         note.versions.push(version);
         const title = getTitle(content);
         let updateTitle = false;
+        
         if(note.title != title) {
             note.title = title;
             updateTitle = true;

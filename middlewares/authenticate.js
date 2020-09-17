@@ -19,7 +19,6 @@ async function authenticate(req, res, next) {
         return next(error);
     }
 
-    console.log(authHeader);
     let decodedToken;
 
     try {
@@ -27,7 +26,7 @@ async function authenticate(req, res, next) {
     }
     catch(error) {
         if(!error.statusCode) {
-            error.statusCode = 500;
+            error.statusCode = 401;
         }
         return next(error);
     }
