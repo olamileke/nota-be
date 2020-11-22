@@ -3,11 +3,12 @@ const ObjectID = require('mongodb').ObjectID;
 
 class User {
 
-    constructor(name, email, avatar, password, created_at) {
+    constructor(name, email, avatar, password, activation_token, created_at) {
         this.name = name;
         this.email = email;
         this.avatar = avatar;
         this.password = password;
+        this.activation_token = activation_token;
         this.created_at = created_at;
     }
 
@@ -19,6 +20,16 @@ class User {
     static findByEmail(email) {
         const db = getDB();
         return db.collection('users').findOne({ email:email });
+    }
+
+    static findByToken(token) {
+        const db = getDB();
+        return db.collection('users').findOne({ activation_token:token });
+    }
+
+    static updateToken(token) {
+        const db = getDB();
+        return db.collection('users').updateOne({ activation_token:token }, { $set:{ activation_token:null } });
     }
 
     static updateAvatar(id, avatar) {

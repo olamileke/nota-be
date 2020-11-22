@@ -1,7 +1,10 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const path = require('path');
 const User = require('../models/user');
 const file = require('../utils/file');
+const mail = require('../utils/mail');
 const s3FileLink = require('../utils/config').s3FileLink;
 
 async function post(req, res, next)  {
@@ -28,14 +31,24 @@ async function post(req, res, next)  {
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
-        user = new User(name, email, avatar, hashedPassword, Date.now());
-        await user.save();
-        const newUser = { name, email, avatar };
-
-        res.status(201).json({
-            data:{
-                user:newUser
+        crypto.randomBytes(32, async (error, buffer) => {
+            if(error) {
+                throw(error);
             }
+
+            const token = buffer.toString('hex');
+            user = new User(name, email, avatar, hashedPassword, token, Date.now());
+            await user.save();
+            const newUser = { name, email, avatar };
+            const mailPath = path.join(path.dirname(process.mainModule.filename), 'templates', 'confirm.html');
+            const data = {to:email, subject:'Confirm your Email', name, token, mailPath};
+            await mail(data);
+
+            res.status(201).json({
+                data:{
+                    user:newUser
+                }
+            })
         })
     }
     catch(error) {
@@ -82,5 +95,32 @@ async function put(req, res, next) {
     });
 }
 
+async function patch(req, res, next) {
+    const token = req.params.token;
+
+    try {
+        
+        const user = await User.findByToken(token);
+        if(!user) {
+           const error = new Error(`user with activation token ${token} does not exist`);
+           error.statusCode = 404;
+           throw(error);
+        }
+
+        await User.updateToken(token);
+        res.status(200).json({
+            message:'user confirmed successfully'
+        });
+    }
+    catch(error) {
+        if(!error.statusCode) {
+            error.statusCode = 500;
+        }
+        return next(error);
+    }
+
+}
+
 exports.post = post;
 exports.put = put;
+exports.patch = patch;

@@ -26,7 +26,7 @@ async function post(req, res, next) {
         }
 
         const passwordCorrect = await bcrypt.compare(password, user.password);
-        if(!passwordCorrect) {
+        if(!passwordCorrect || user.activation_token) {
             const error = new Error('user does not exist');
             error.statusCode = 404;
             throw error;   
