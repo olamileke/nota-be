@@ -25,6 +25,6 @@ router.put('/users', authenticate, multer, [ body('image').custom((value, {req})
 }) ], users.put)
 
 
-router.patch('/users/:token', users.patch);
+router.patch('/users', [ body('token').isLength({ min:32 }) ],  users.patch);
 
 module.exports = router;

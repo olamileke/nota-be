@@ -96,7 +96,16 @@ async function put(req, res, next) {
 }
 
 async function patch(req, res, next) {
-    const token = req.params.token;
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        const error = new Error('validation failed');
+        error.statusCode = 422;
+        error.errors = errors;
+        return next(error);
+    }
+
+    const token = req.body.token;
 
     try {
         

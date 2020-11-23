@@ -37,6 +37,11 @@ class User {
         return db.collection('users').updateOne({ _id:new ObjectID(id) }, { $set:{ avatar:avatar } });
     }
 
+    static updatePassword(id, password) {
+        const db = getDB();
+        return db.collection('users').updateOne({ _id:new ObjectID(id) }, { $set:{ password:password } });
+    }
+
     save() {
         const db = getDB();
         return db.collection('users').insertOne(this);
