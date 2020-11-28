@@ -4,3 +4,4 @@ node_modules
 
 # configuration
 /utils/config.js
+.vercel

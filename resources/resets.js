@@ -31,7 +31,6 @@ async function post(req, res, next) {
             const token = buffer.toString('hex');
 
             const expiry = Date.now() + (30 * 60 * 1000);
-            await Reset.delete(user._id);
             const reset = new Reset(user._id, token, expiry, Date.now());
             await reset.save();
             const mailPath = path.join('templates', 'change-password.html');
