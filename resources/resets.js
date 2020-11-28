@@ -34,10 +34,8 @@ async function post(req, res, next) {
             await Reset.delete(user._id);
             const reset = new Reset(user._id, token, expiry, Date.now());
             await reset.save();
-            const dt = new Date(expiry);
-            const time = `${dt.getHours()}:${dt.getMinutes()}`;
-            const mailPath = path.join(path.dirname(process.mainModule.filename), 'templates', 'change-password.html');
-            const data = {to:user.email, name:user.name, subject:'Change your Nota password', expiry:time, token, mailPath };
+            const mailPath = path.join('templates', 'change-password.html');
+            const data = {to:user.email, name:user.name.split(' ')[1], subject:'Change your Nota password', token, mailPath};
             await mail(data);
             res.status(200).json({
                 message:'password reset mail sent successfully'

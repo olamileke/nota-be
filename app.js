@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const connectToDatabase = require('./utils/database').connectToDatabase;
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth'); 
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accepts, Authorization');
     next();
 })
+
+app.use(express.static(path.join(__dirname, 'templates')));
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1', authRoutes);

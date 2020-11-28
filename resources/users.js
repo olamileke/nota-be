@@ -40,8 +40,8 @@ async function post(req, res, next)  {
             user = new User(name, email, avatar, hashedPassword, token, Date.now());
             await user.save();
             const newUser = { name, email, avatar };
-            const mailPath = path.join(path.dirname(process.mainModule.filename), 'templates', 'confirm.html');
-            const data = {to:email, subject:'Confirm your Email', name, token, mailPath};
+            const mailPath = path.join('templates', 'confirm.html');
+            const data = {to:email, subject:'Confirm your Email', name:name.split(' ')[1], token, mailPath};
             await mail(data);
 
             res.status(201).json({
