@@ -2,7 +2,7 @@
 
 ------------
 
-REST API backend of the Nota application written in express. View the live application [here](https://notaapp.netlify.app "here"). 
+REST API backend of the Nota application written in express. View the live application [here](https://thenotaapp.xyz "here"). 
 
 The front end is written in React and can be found [here](https://github.com/olamileke/nota-fe "here").
 
