@@ -10,7 +10,7 @@ To run this application locally, there are a number of prerequisites which are
 
 - A mongo db atlas cluster. [Sign up](https://www.mongodb.com/cloud/atlas/register "Sign up") on Atlas and [login](https://account.mongodb.com/account/login?nds=true "login") to create your cluster.
 
-  Add a new user with **readWrite** privileges in the Database Access Tab. Also, grant access to the cluster from any location by adding an IP address of **0.0.0.0**. Do this in   the Network Access tab. Take note of the preformatted connection string from the **connect to cluster** option.
+  Add a new user with *readWrite* privileges in the Database Access Tab. Also, grant access to the cluster from any location by adding an IP address of *0.0.0.0*. Do this in   the Network Access tab. Take note of the preformatted connection string from the *connect to cluster* option.
 
 - AWS access credentials.  [Create](https://portal.aws.amazon.com/billing/signup "Create") an AWS account and add your credit card to enable you make use of the free tier or if you have cash(baller!) make use of the paid tier. 
 
@@ -24,7 +24,7 @@ To run this application locally, there are a number of prerequisites which are
 
   Seeing as the application will be running locally/is not live, you need to create a sandbox domain for testing mail functionality locally. Do that [here](https://app.mailgun.com/app/sending/domains "here"). 
 
-  Take note of the domain name with the **sandbox prefix** and the **private api key** for the domain. Find the api key [here](https://app.mailgun.com/app/sending/domains  "here"). For sandbox domains, you need to verify an email address you have access to for the domain.
+  Take note of the domain name with the *sandbox prefix* and the **private api key** for the domain. Find the api key [here](https://app.mailgun.com/app/sending/domains  "here"). For sandbox domains, you need to verify an email address you have access to for the domain.
 
   This is the only email(s) you will be able to send mails to from the app making use of the sandbox domain. Do this from the created sandbox domain tab.
 
